@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "201720539895",
+    "firebase_url": "https://fir-shop-fadda.firebaseio.com",
+    "project_id": "fir-shop-fadda",
+    "storage_bucket": "fir-shop-fadda.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201720539895:android:31ac6c984bbdefa56c01f2",
+        "android_client_info": {
+          "package_name": "com.night.bshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "201720539895-2hrkohft4rdh5vqserb53toti26i9etn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.night.bshop",
+            "certificate_hash": "d5a034719295327d4d2afc808868084bfc0e4b07"
+          }
+        },
+        {
+          "client_id": "201720539895-30kmtdlcuoilpr077572mtbheepghe43.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTRROYkmjsbjLzx1Be2ny4EY8mOo4MaTY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "201720539895-30kmtdlcuoilpr077572mtbheepghe43.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
