@@ -9,11 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity(),FirebaseAuth.AuthStateListener{
 
@@ -77,7 +79,26 @@ class MainActivity : AppCompatActivity(),FirebaseAuth.AuthStateListener{
         return when (item.itemId) {
             R.id.action_settings -> true
             R.id.action_signIn -> {
-                startActivityForResult(Intent(this,SigninActivity::class.java),RC_SIGNIN)
+                val whiteList = listOf<String>("tw","cn","hk","au")
+                startActivityForResult(
+                    AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(
+                            listOf(
+                                AuthUI.IdpConfig.EmailBuilder().build(),
+                                AuthUI.IdpConfig.GoogleBuilder().build(),
+                                AuthUI.IdpConfig.FacebookBuilder().build(),
+                                AuthUI.IdpConfig.PhoneBuilder()
+                                    .setWhitelistedCountries(whiteList)
+                                    .setDefaultCountryIso("tw")
+                                    .build()
+                            )
+                        )
+                        .setIsSmartLockEnabled(false)
+                        .setLogo(R.drawable.shop)
+                        .build(),
+                        RC_SIGNIN)
+                /*startActivityForResult(Intent(this,SigninActivity::class.java),RC_SIGNIN)*/
                 true
             }
             R.id.action_signOut -> {

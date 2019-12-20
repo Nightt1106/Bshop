@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Bshop</string>
     <string name="action_settings">Settings</string>
+    <string name="facebook_application_id">797563180681059</string>
+    <string name="facebook_login_protocol_scheme">fb797563180681059</string>
+
 </resources>
