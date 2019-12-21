@@ -11,8 +11,12 @@
         android:orderInCategory="101"
         android:title="Sign out" />
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_item"
         android:orderInCategory="102"
+        android:title="Item" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="103"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 </menu>

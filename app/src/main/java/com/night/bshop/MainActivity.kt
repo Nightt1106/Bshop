@@ -11,15 +11,19 @@ import android.view.MenuItem
 import android.view.View
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_items.*
 
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.fab
+import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.content_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(),FirebaseAuth.AuthStateListener{
 
-    private val RC_SIGNIN = 100
+    private val RC_ITEM: Int = 200
+    private val RC_SIGN_IN = 100
     private val TAG = MainActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,13 +101,18 @@ class MainActivity : AppCompatActivity(),FirebaseAuth.AuthStateListener{
                         .setIsSmartLockEnabled(false)
                         .setLogo(R.drawable.shop)
                         .build(),
-                        RC_SIGNIN)
+                        RC_SIGN_IN)
+
                 /*startActivityForResult(Intent(this,SigninActivity::class.java),RC_SIGNIN)*/
                 true
             }
             R.id.action_signOut -> {
                 FirebaseAuth.getInstance().signOut()
                 Log.d("SignOut", "User is Sign out")
+                true
+            }
+            R.id.action_item -> {
+                startActivityForResult(Intent(this,ItemsActivity::class.java),RC_ITEM)
                 true
             }
             else -> super.onOptionsItemSelected(item)
