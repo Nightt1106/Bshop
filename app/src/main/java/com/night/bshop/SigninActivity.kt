@@ -14,7 +14,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.activity_signin.*
-import java.lang.Exception
 
 class SigninActivity : AppCompatActivity() {
 
