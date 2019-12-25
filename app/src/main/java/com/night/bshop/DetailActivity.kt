@@ -25,7 +25,7 @@ class DetailActivity : AppCompatActivity() {
             FirebaseFirestore.getInstance()
                 .collection("items")
                 .document(it)
-                .set(item)
+                .update("viewCount",item.viewCount)
         }
     }
 }
