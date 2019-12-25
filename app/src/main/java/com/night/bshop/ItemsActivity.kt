@@ -9,24 +9,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_items.*
+import kotlinx.android.synthetic.main.item_row.*
 import java.util.*
 
 class ItemsActivity : AppCompatActivity() {
 
-    private lateinit var adapter :FirestoreRecyclerAdapter<Item,ItemHolder>
+//    private lateinit var adapter :FirestoreRecyclerAdapter<Item,ItemHolder>
+    private val TAG = ItemsActivity::class.java.simpleName
     private var categories = mutableListOf<Category>()
+    private lateinit var adapter: ItemAdapter
+    private lateinit var itemViewModel: ItemViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_items)
 
-        setupAdapter()
+        //setupAdapter()
 
         FirebaseFirestore.getInstance().collection("categories")
             .get().addOnCompleteListener{ task ->
@@ -55,66 +62,43 @@ class ItemsActivity : AppCompatActivity() {
                                 p2: Int,
                                 p3: Long
                             ) {
-                                setupAdapter()
+//                                setupAdapter()
                             }
                         }
                     }
                 }
             }
-
-
-
-    }
-
-    private fun setupAdapter() {
-
-        val selected = spinner.selectedItemPosition
-
-        // if(query value change) restart listening
-
-        var query = if(selected > 0){
-            adapter.stopListening()
-            FirebaseFirestore.getInstance()
-                .collection("items")
-                .whereEqualTo("category" ,categories[selected].id)
-                .orderBy("viewCount", Query.Direction.DESCENDING)
-                .limit(10)
-        } else {
-            FirebaseFirestore.getInstance()
-                .collection("items")
-                .orderBy("viewCount", Query.Direction.DESCENDING)
-                .limit(10)
-        }
-
-
-
-        val options: FirestoreRecyclerOptions<Item> = FirestoreRecyclerOptions.Builder<Item>()
-            .setQuery(query, Item::class.java)
-            .build()
-
-        adapter = object : FirestoreRecyclerAdapter<Item, ItemHolder>(options) {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_row, parent, false)
-                return ItemHolder(view)
-            }
-
-            override fun onBindViewHolder(holder: ItemHolder, position: Int, item: Item) {
-                //*****
-                item.id = snapshots.getSnapshot(position).id
-
-                holder.bindTo(item)
-                holder.itemView.setOnClickListener {
-                    itemClicked(item, position)
-                }
-            }
-
-        }
         recycler.setHasFixedSize(true)
         recycler.layoutManager = LinearLayoutManager(this)
+        adapter = ItemAdapter(mutableListOf())
         recycler.adapter = adapter
+        itemViewModel = ViewModelProviders.of(this)
+            .get(ItemViewModel::class.java)
+        itemViewModel.getItems().observe(this, androidx.lifecycle.Observer {
+            Log.d(TAG,"observer: ${it.size}")
+            adapter.items = it
+            adapter.notifyDataSetChanged()
+        })
+        //setupAapter
+    }
 
-        adapter.startListening()
+    inner class ItemAdapter(var items: List<Item>) : RecyclerView.Adapter<ItemHolder>(){
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
+            return ItemHolder(
+                LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_row, parent,false))
+        }
+
+        override fun getItemCount(): Int {
+            return items.size
+        }
+
+        override fun onBindViewHolder(holder: ItemHolder, position: Int) {
+            holder.bindTo(items.get(position))
+            holder.itemView.setOnClickListener {
+                itemClicked(items.get(position),position)
+            }
+        }
     }
 
     private fun itemClicked(item: Item, position: Int) {
@@ -126,11 +110,11 @@ class ItemsActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        adapter.startListening()
+//        adapter.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-        adapter.stopListening()
+//        adapter.stopListening()
     }
 }
