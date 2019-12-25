@@ -9,17 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_items.*
-import kotlinx.android.synthetic.main.item_row.*
-import java.util.*
+
+
 
 class ItemsActivity : AppCompatActivity() {
 
@@ -59,10 +55,11 @@ class ItemsActivity : AppCompatActivity() {
                             override fun onItemSelected(
                                 p0: AdapterView<*>?,
                                 p1: View?,
-                                p2: Int,
+                                position: Int,
                                 p3: Long
                             ) {
-//                                setupAdapter()
+                               //setupAdapter
+                                itemViewModel.setCategory(categories[position].id)
                             }
                         }
                     }
@@ -75,8 +72,14 @@ class ItemsActivity : AppCompatActivity() {
         itemViewModel = ViewModelProviders.of(this)
             .get(ItemViewModel::class.java)
         itemViewModel.getItems().observe(this, androidx.lifecycle.Observer {
-            Log.d(TAG,"observer: ${it.size}")
-            adapter.items = it
+            Log.d(TAG,"observer: ${it.size()}")
+            val list = mutableListOf<Item>()
+            for (doc in it.documents){
+                val item = doc.toObject(Item::class.java)?: Item()
+                item.id = doc.id
+                list.add(item)
+            }
+            adapter.items = list
             adapter.notifyDataSetChanged()
         })
         //setupAapter
