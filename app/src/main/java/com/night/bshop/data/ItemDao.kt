@@ -1,9 +1,10 @@
-package com.night.bshop
+package com.night.bshop.data
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.night.bshop.model.Item
 
 //Database access object
 @Dao

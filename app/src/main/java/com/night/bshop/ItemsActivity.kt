@@ -13,6 +13,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
+import com.night.bshop.model.Category
+import com.night.bshop.model.Item
+import com.night.bshop.view.ItemHolder
+import com.night.bshop.view.ItemViewModel
 import kotlinx.android.synthetic.main.activity_items.*
 
 
@@ -35,9 +39,14 @@ class ItemsActivity : AppCompatActivity() {
             .get().addOnCompleteListener{ task ->
                 if(task.isSuccessful){
                     task.result?.let {
-                        categories.add(Category("","不分類"))
+                        categories.add(Category("", "不分類"))
                         for( doc in it){
-                            categories.add(Category(doc.id, doc.data["name"].toString()))
+                            categories.add(
+                                Category(
+                                    doc.id,
+                                    doc.data["name"].toString()
+                                )
+                            )
                         }
                         spinner.adapter = ArrayAdapter<Category>(
                             this,
@@ -72,16 +81,11 @@ class ItemsActivity : AppCompatActivity() {
         itemViewModel = ViewModelProviders.of(this)
             .get(ItemViewModel::class.java)
         itemViewModel.getItems().observe(this, androidx.lifecycle.Observer {
-            Log.d(TAG,"observer: ${it.size()}")
-            val list = mutableListOf<Item>()
-            for (doc in it.documents){
-                val item = doc.toObject(Item::class.java)?: Item()
-                item.id = doc.id
-                list.add(item)
-            }
-            adapter.items = list
+            Log.d(TAG,"observer: ${it.size}")
+
+            adapter.items = it
             adapter.notifyDataSetChanged()
-            list.forEach {
+            /*list.forEach {
                 ItemDatabase.getDatabase(this)?.getItemDao()
                     ?.addItem(it)
             }
@@ -89,7 +93,7 @@ class ItemsActivity : AppCompatActivity() {
                 ?.getItems()
                 ?.forEach {
                     Log.d(TAG,"Room  ${it.id} /${it.tittle}")
-                }
+                }*/
         })
         //setupAapter
     }
@@ -98,7 +102,8 @@ class ItemsActivity : AppCompatActivity() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
             return ItemHolder(
                 LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_row, parent,false))
+                    .inflate(R.layout.item_row, parent, false)
+            )
         }
 
         override fun getItemCount(): Int {
@@ -122,11 +127,9 @@ class ItemsActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-//        adapter.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-//        adapter.stopListening()
     }
 }

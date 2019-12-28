@@ -1,4 +1,4 @@
-package com.night.bshop
+package com.night.bshop.model
 
 import android.os.Parcelable
 import androidx.room.Entity
